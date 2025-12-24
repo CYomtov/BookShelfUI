@@ -1,0 +1,333 @@
+// Book Detail Component Styles - Starbucks-Inspired Clean Theme
+
+.book-detail-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 2rem;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--color-primary);
+  border-right-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-state p {
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Detail Header
+.detail-header {
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-back {
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+// Hero Section - Premium Starbucks Design
+.detail-hero {
+  background: var(--color-bg-0);
+  border: 2px solid var(--color-primary);
+  border-radius: 1rem;
+  padding: 3rem 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.book-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.book-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+}
+
+.book-author {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.book-rating-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.rating-stars {
+  font-size: 1.4rem;
+  color: #D4AF37;
+  font-weight: 800;
+}
+
+.rating-text {
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+// Tags - Professional Design
+.book-tags {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, rgba(0, 112, 74, 0.1), rgba(0, 112, 74, 0.05));
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+
+  &.tag-genre {
+    background: linear-gradient(135deg, rgba(214, 35, 0, 0.1), rgba(214, 35, 0, 0.05));
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  &.tag-status {
+    background: rgba(30, 122, 81, 0.12);
+    color: #1E7A51;
+    border-color: #1E7A51;
+  }
+}
+
+// Information Grid - Professional
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.info-item {
+  background: var(--color-bg-0);
+  border: 2px solid var(--color-primary);
+  border-radius: 0.8rem;
+  padding: 1.8rem;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+
+  &:hover {
+    border-color: var(--color-primary-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+.info-label {
+  display: block;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 0.7rem;
+}
+
+.info-value {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin: 0;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+// Action Buttons - Professional
+.detail-actions {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--color-primary);
+}
+
+.btn {
+  padding: 0.85rem 1.8rem;
+  border: none;
+  border-radius: 0.7rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+    flex: 1;
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  &.btn-secondary {
+    background: var(--color-bg-1);
+    color: var(--text-primary);
+    border: 2px solid var(--color-primary);
+    flex: 1;
+
+    &:hover:not(:disabled) {
+      background: var(--color-bg-0);
+      border-color: var(--color-primary-dark);
+      color: var(--color-primary);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+  }
+
+  &.btn-danger {
+    background: var(--color-danger);
+    color: white;
+    box-shadow: var(--shadow-md);
+    flex: 1;
+
+    &:hover:not(:disabled) {
+      background: #B81F00;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Alert - Clean Style
+.alert {
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.7rem;
+  border-left: 4px solid;
+  font-weight: 500;
+
+  &.alert-danger {
+    background-color: rgba(214, 35, 0, 0.08);
+    border-left-color: var(--color-danger);
+    color: #C91800;
+
+    strong {
+      color: var(--color-danger);
+    }
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: var(--color-bg-0);
+  border-radius: 1rem;
+  border: 2px solid var(--color-primary);
+  box-shadow: var(--shadow-md);
+
+  p {
+    color: var(--text-secondary);
+    font-size: 1.15rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+}
+
+// Responsive Design - Mobile First
+@media (max-width: 768px) {
+  .book-detail-container {
+    padding: 1rem;
+  }
+
+  .book-title {
+    font-size: 2rem;
+  }
+
+  .detail-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .detail-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .book-title {
+    font-size: 1.5rem;
+  }
+
+  .detail-hero {
+    padding: 2rem 1rem;
+  }
+
+  .detail-actions {
+    gap: 0.8rem;
+
+    .btn {
+      font-size: 0.8rem;
+      padding: 0.7rem 1rem;
+    }
+  }
+}

@@ -1,0 +1,165 @@
+<div class="book-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Edit Book' : 'Add New Book' }}</h2>
+  </div>
+
+  <!-- Error Alert -->
+  <div *ngIf="error$ | async as error" class="alert alert-danger">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="book-form">
+    <!-- Title Field -->
+    <div class="form-group">
+      <label for="title" class="form-label">
+        Title
+        <span class="required">*</span>
+      </label>
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        class="form-input"
+        placeholder="Enter book title"
+        [class.is-invalid]="hasError('title', 'required')"
+      />
+      <div class="form-error" *ngIf="hasError('title', 'required')">
+        Title is required
+      </div>
+    </div>
+
+    <!-- Author Field -->
+    <div class="form-group">
+      <label for="author" class="form-label">
+        Author
+        <span class="required">*</span>
+      </label>
+      <input
+        id="author"
+        type="text"
+        formControlName="author"
+        class="form-input"
+        placeholder="Enter author name"
+        [class.is-invalid]="hasError('author', 'required')"
+      />
+      <div class="form-error" *ngIf="hasError('author', 'required')">
+        Author is required
+      </div>
+    </div>
+
+    <!-- ISBN Field (Optional) -->
+    <div class="form-group">
+      <label for="isbn" class="form-label">ISBN</label>
+      <input
+        id="isbn"
+        type="text"
+        formControlName="isbn"
+        class="form-input"
+        placeholder="Enter ISBN (optional, max 20 characters)"
+        [class.is-invalid]="hasError('isbn', 'maxlength')"
+      />
+      <div class="form-error" *ngIf="hasError('isbn', 'maxlength')">
+        ISBN must be 20 characters or less
+      </div>
+      <small class="form-hint">Optional: Enter the book ISBN</small>
+    </div>
+
+    <!-- Published Year Field (Optional) -->
+    <div class="form-group">
+      <label for="publishedYear" class="form-label">Published Year</label>
+      <input
+        id="publishedYear"
+        type="number"
+        formControlName="publishedYear"
+        class="form-input"
+        placeholder="Enter published year (optional)"
+        min="0"
+        max="3000"
+        [class.is-invalid]="hasError('publishedYear', 'min') || hasError('publishedYear', 'max')"
+      />
+      <div class="form-error" *ngIf="hasError('publishedYear', 'min')">
+        Published year must be 0 or greater
+      </div>
+      <div class="form-error" *ngIf="hasError('publishedYear', 'max')">
+        Published year must be 3000 or less
+      </div>
+    </div>
+
+    <!-- Genre Field (Optional) -->
+    <div class="form-group">
+      <label for="genreId" class="form-label">Genre</label>
+      <select id="genreId" formControlName="genreId" class="form-input">
+        <option value="">Select a genre (optional)</option>
+        <option *ngFor="let genre of genres$ | async" [value]="genre.genreId">
+          {{ genre.genreName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Status Field (Required) -->
+    <div class="form-group">
+      <label for="statusId" class="form-label">
+        Status
+        <span class="required">*</span>
+      </label>
+      <select
+        id="statusId"
+        formControlName="statusId"
+        class="form-input"
+        [class.is-invalid]="hasError('statusId', 'required')"
+      >
+        <option value="">Select a status</option>
+        <option *ngFor="let status of statuses$ | async" [value]="status.statusId">
+          {{ status.statusName }}
+        </option>
+      </select>
+      <div class="form-error" *ngIf="hasError('statusId', 'required')">
+        Status is required
+      </div>
+    </div>
+
+    <!-- Rating Field (Optional) -->
+    <div class="form-group">
+      <label for="rating" class="form-label">Rating (0-5)</label>
+      <input
+        id="rating"
+        type="number"
+        formControlName="rating"
+        class="form-input"
+        placeholder="Enter rating (optional, 0-5)"
+        min="0"
+        max="5"
+        step="0.5"
+        [class.is-invalid]="hasError('rating', 'min') || hasError('rating', 'max')"
+      />
+      <div class="form-error" *ngIf="hasError('rating', 'min')">
+        Rating must be 0 or greater
+      </div>
+      <div class="form-error" *ngIf="hasError('rating', 'max')">
+        Rating must be 5 or less
+      </div>
+      <small class="form-hint">Optional: Rate the book from 0 to 5 stars</small>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="bookForm.invalid || (loading$ | async)"
+      >
+        <span *ngIf="!(loading$ | async)">
+          {{ isEditMode ? 'Update Book' : 'Add Book' }}
+        </span>
+        <span *ngIf="loading$ | async">
+          <span class="spinner-small"></span>
+          Processing...
+        </span>
+      </button>
+
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">
+        Clear Form
+      </button>
+    </div>
+  </form>
+</div>

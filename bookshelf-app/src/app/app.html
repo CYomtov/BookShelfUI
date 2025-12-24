@@ -1,0 +1,27 @@
+<!-- Bookshelf Application Layout -->
+<div class="app-container">
+  <!-- Navigation Header -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <h1 class="navbar-title">📚 Bookshelf</h1>
+      <div class="navbar-links">
+        <a routerLink="/books" routerLinkActive="active" class="nav-link">
+          Browse Books
+        </a>
+        <a routerLink="/books/add" routerLinkActive="active" class="nav-link">
+          Add Book
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Bookshelf Application. Built with Angular and NGXS.</p>
+  </footer>
+</div>

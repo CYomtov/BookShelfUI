@@ -1,0 +1,89 @@
+<div class="book-detail-container">
+  <!-- Loading State -->
+  <div *ngIf="loading$ | async" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading book details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error$ | async as error" class="alert alert-danger">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <!-- Book Details -->
+  <div *ngIf="(selectedBook$ | async) as book" class="book-detail">
+    <!-- Header with Back Button -->
+    <div class="detail-header">
+      <button (click)="goBack()" class="btn btn-secondary btn-back">
+        ← Back to Books
+      </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="detail-content">
+      <!-- Book Title and Meta Info -->
+      <div class="detail-hero">
+        <div class="book-meta">
+          <h1 class="book-title">{{ book.title }}</h1>
+          <p class="book-author">by {{ book.author }}</p>
+          
+          <!-- Rating -->
+          <div class="book-rating-detail">
+            <span class="rating-stars">{{ getStarRating(book.rating) }}</span>
+          </div>
+
+          <!-- Genre and Status -->
+          <div class="book-tags">
+            <span *ngIf="book.genre" class="tag tag-genre">📚 {{ book.genre }}</span>
+            <span *ngIf="book.status" class="tag tag-status">📌 {{ book.status }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Book Information Grid -->
+      <div class="detail-info-grid">
+        <!-- ISBN -->
+        <div class="info-item">
+          <label class="info-label">ISBN</label>
+          <p class="info-value">{{ book.isbn || 'Not provided' }}</p>
+        </div>
+
+        <!-- Published Year -->
+        <div class="info-item">
+          <label class="info-label">Published Year</label>
+          <p class="info-value">{{ book.publishedYear || 'Unknown' }}</p>
+        </div>
+
+        <!-- Created Date -->
+        <div class="info-item">
+          <label class="info-label">Added to Collection</label>
+          <p class="info-value">{{ formatDate(book.createdAt) }}</p>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="info-item">
+          <label class="info-label">Last Updated</label>
+          <p class="info-value">{{ formatDate(book.updatedAt) }}</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="detail-actions">
+        <button (click)="editBook()" class="btn btn-primary">
+          ✏️ Edit Book
+        </button>
+        <button (click)="deleteBook()" class="btn btn-danger">
+          🗑️ Delete Book
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!(loading$ | async) && !(selectedBook$ | async)" class="empty-state">
+    <p>Book not found</p>
+    <button (click)="goBack()" class="btn btn-primary">
+      Return to Books List
+    </button>
+  </div>
+</div>
