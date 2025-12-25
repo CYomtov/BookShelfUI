@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -7,13 +7,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Book, CreateBookRequest, StatusDto, GenreDto } from '../../models/book.model';
-import { CreateBook, UpdateBook, FetchStatuses, FetchGenres } from '../../store/book.actions';
+import {
+  CreateBook,
+  UpdateBook,
+  FetchStatuses,
+  FetchGenres,
+  FetchBookById,
+  ClearSelectedBook,
+} from '../../store/book.actions';
 import { BookState } from '../../store/book.state';
 
 /**
@@ -27,11 +34,14 @@ import { BookState } from '../../store/book.state';
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './book-form.component.html',
   styleUrls: ['./book-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BookFormComponent implements OnInit, OnDestroy {
   private store = inject(Store);
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private cd = inject(ChangeDetectorRef);
 
   bookForm!: FormGroup;
   loading$ = this.store.select(BookState.loading);
@@ -47,12 +57,39 @@ export class BookFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadLookupData();
     this.initializeForm();
+    this.handleRouteParams();
     this.subscribeToSelectedBook();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /**
+   * Handle route params to determine create vs edit mode
+   */
+  private handleRouteParams(): void {
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      const idParam = params.get('id');
+      if (idParam) {
+        const bookId = parseInt(idParam, 10);
+        if (!Number.isNaN(bookId)) {
+          const selected = this.store.selectSnapshot(BookState.selectedBook);
+          if (!selected || selected.id !== bookId) {
+            this.store.dispatch(new FetchBookById(bookId));
+          } else {
+            this.populateFormWithBook(selected);
+          }
+          this.setEditMode(true);
+        }
+      } else {
+        this.setEditMode(false);
+        this.store.dispatch(new ClearSelectedBook());
+        this.bookForm.reset();
+        this.cd.markForCheck();
+      }
+    });
   }
 
   /**
@@ -85,11 +122,12 @@ export class BookFormComponent implements OnInit, OnDestroy {
   private subscribeToSelectedBook(): void {
     this.selectedBook$.pipe(takeUntil(this.destroy$)).subscribe((book) => {
       if (book) {
-        this.isEditMode = true;
+        this.setEditMode(true);
         this.populateFormWithBook(book);
       } else {
-        this.isEditMode = false;
+        this.setEditMode(false);
         this.bookForm.reset();
+        this.cd.markForCheck();
       }
     });
   }
@@ -107,6 +145,7 @@ export class BookFormComponent implements OnInit, OnDestroy {
       statusId: book.status ? this.getStatusIdByName(book.status) : '',
       rating: book.rating,
     });
+    this.cd.markForCheck();
   }
 
   /**
@@ -178,6 +217,7 @@ export class BookFormComponent implements OnInit, OnDestroy {
    */
   resetForm(): void {
     this.bookForm.reset();
+    this.cd.markForCheck();
   }
 
   /**
@@ -193,5 +233,15 @@ export class BookFormComponent implements OnInit, OnDestroy {
    */
   getFormField(fieldName: string) {
     return this.bookForm.get(fieldName);
+  }
+
+  /**
+   * Update edit mode flag and request change detection when needed
+   */
+  private setEditMode(isEdit: boolean): void {
+    if (this.isEditMode !== isEdit) {
+      this.isEditMode = isEdit;
+      this.cd.markForCheck();
+    }
   }
 }

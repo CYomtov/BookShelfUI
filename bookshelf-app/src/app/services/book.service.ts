@@ -120,7 +120,6 @@ export class BookService {
     if (typeof ErrorEvent !== 'undefined' && error.error instanceof ErrorEvent) {
       // Client-side error (network error, timeout, CORS, etc.)
       errorMessage = `Network Error: ${error.error.message}`;
-      console.error('Client-side error:', error.error);
     } else {
       // Server-side error or connection error
       if (error.status === 0) {
@@ -128,15 +127,8 @@ export class BookService {
       } else {
         errorMessage = `Server Error (${error.status}): ${error.message}`;
       }
-      console.error('Server-side error:', {
-        status: error.status,
-        statusText: error.statusText,
-        message: error.message,
-        url: error.url,
-      });
     }
 
-    console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
 }

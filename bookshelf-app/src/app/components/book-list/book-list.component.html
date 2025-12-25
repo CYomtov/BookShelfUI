@@ -6,51 +6,41 @@
   </div>
 
   <!-- Error Alert -->
-  <div *ngIf="(error$ | async) as error" class="alert alert-danger">
+  @if ((error$ | async); as error) {
+  <div class="alert alert-danger">
     <strong>Error:</strong> {{ error }}
   </div>
+  }
+
 
   <!-- Controls Section -->
   <div class="controls-section">
     <!-- Search Bar -->
     <div class="search-bar">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search by title or author..."
-        [value]="searchTerm()"
-        (input)="onSearch($event.target.value)"
-      />
+      <input type="text" class="search-input" placeholder="Search by title or author..." [value]="searchTerm()"
+        (input)="onSearch($event.target.value)" />
     </div>
 
     <!-- Filters -->
     <div class="filters">
       <div class="filter-group">
         <label for="genre-filter">Genre:</label>
-        <select
-          id="genre-filter"
-          class="filter-select"
-          [ngModel]="getGenreSelectValue()"
-          (ngModelChange)="onGenreChange($event)"
-        >
+        <select id="genre-filter" class="filter-select" [ngModel]="getGenreSelectValue()"
+          (ngModelChange)="onGenreChange($event)">
           <option value="">All Genres</option>
           @for (genre of genres$ | async; track genre.genreId) {
-            <option [value]="genre.genreId + ''">{{ genre.genreName }}</option>
+          <option [value]="genre.genreId + ''">{{ genre.genreName }}</option>
           }
         </select>
       </div>
 
       <div class="filter-group">
         <label for="status-filter">Status:</label>
-        <select
-          id="status-filter"
-          class="filter-select"
-          [ngModel]="getStatusSelectValue()"
-          (ngModelChange)="onStatusChange($event)"
-        >
+        <select id="status-filter" class="filter-select" [ngModel]="getStatusSelectValue()"
+          (ngModelChange)="onStatusChange($event)">
           <option value="">All Status</option>
           @for (status of statuses$ | async; track status.statusId) {
-            <option [value]="status.statusId + ''">{{ status.statusName }}</option>
+          <option [value]="status.statusId + ''">{{ status.statusName }}</option>
           }
         </select>
       </div>
@@ -64,108 +54,103 @@
 
   <!-- Loading / Table / Empty states using new @if syntax -->
   @if ((loading$ | async) === true) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Loading your books...</p>
-    </div>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your books...</p>
+  </div>
   } @else {
-    <div class="table-wrapper">
-      @if ((books$ | async)?.length === 0) {
-        <div class="empty-state">
-          <p>No books found. Start by adding your first book!</p>
-        </div>
-      } @else {
-        <table class="books-table">
-          <thead>
-            <tr>
-              <th (click)="onSortChange('title')" class="sortable" [class.active]="sortConfig().column === 'title'">Title {{ getSortIndicator('title') }}</th>
-              <th (click)="onSortChange('author')" class="sortable" [class.active]="sortConfig().column === 'author'">Author {{ getSortIndicator('author') }}</th>
-              <th (click)="onSortChange('genre')" class="sortable" [class.active]="sortConfig().column === 'genre'">Genre {{ getSortIndicator('genre') }}</th>
-              <th (click)="onSortChange('status')" class="sortable" [class.active]="sortConfig().column === 'status'">Status {{ getSortIndicator('status') }}</th>
-              <th (click)="onSortChange('rating')" class="sortable" [class.active]="sortConfig().column === 'rating'">Rating {{ getSortIndicator('rating') }}</th>
-              <th (click)="onSortChange('publishedYear')" class="sortable" [class.active]="sortConfig().column === 'publishedYear'">Year {{ getSortIndicator('publishedYear') }}</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (book of books$ | async; track book.id) {
-              <tr class="book-row" (click)="selectBook(book)" [class.anim-enter]="animateList()" [class.anim-leave]="leaving().includes(book.id) || animateListOut()">
-                <td class="title-cell"><span class="book-title">{{ book.title }}</span></td>
-                <td class="author-cell">{{ book.author }}</td>
-                <td class="genre-cell"><span class="badge badge-genre">{{ book.genre }}</span></td>
-                <td class="status-cell"><span class="badge" [ngClass]="getStatusBadgeClass(book.status)">{{ book.status }}</span></td>
-                <td class="rating-cell">
-                  <span class="stars" *ngIf="book.rating">★ {{ book.rating.toFixed(1) }}</span>
-                  <span *ngIf="!book.rating" class="no-rating">—</span>
-                </td>
-                <td class="year-cell">{{ book.publishedYear }}</td>
-                <td class="actions-cell" (click)="$event.stopPropagation()">
-                  <button mat-icon-button color="primary" (click)="editBook(book, $event)" aria-label="Edit book">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button color="warn" (click)="deleteBook(book.id, $event)" aria-label="Delete book">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
+  <div class="table-wrapper">
+    @if ((books$ | async)?.length === 0) {
+    <div class="empty-state">
+      <p>No books found. Start by adding your first book!</p>
     </div>
+    } @else {
+    <table class="books-table">
+      <thead>
+        <tr>
+          <th (click)="onSortChange('title')" class="sortable" [class.active]="sortConfig().column === 'title'">Title {{
+            getSortIndicator('title') }}</th>
+          <th (click)="onSortChange('author')" class="sortable" [class.active]="sortConfig().column === 'author'">Author
+            {{ getSortIndicator('author') }}</th>
+          <th (click)="onSortChange('genre')" class="sortable" [class.active]="sortConfig().column === 'genre'">Genre {{
+            getSortIndicator('genre') }}</th>
+          <th (click)="onSortChange('status')" class="sortable" [class.active]="sortConfig().column === 'status'">Status
+            {{ getSortIndicator('status') }}</th>
+          <th (click)="onSortChange('rating')" class="sortable" [class.active]="sortConfig().column === 'rating'">Rating
+            {{ getSortIndicator('rating') }}</th>
+          <th (click)="onSortChange('publishedYear')" class="sortable"
+            [class.active]="sortConfig().column === 'publishedYear'">Year {{ getSortIndicator('publishedYear') }}</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (book of books$ | async; track book.id) {
+        <tr class="book-row" (click)="selectBook(book)" [class.anim-enter]="animateList()"
+          [class.anim-leave]="leaving().includes(book.id) || animateListOut()">
+          <td class="title-cell"><span class="book-title">{{ book.title }}</span></td>
+          <td class="author-cell">{{ book.author }}</td>
+          <td class="genre-cell"><span class="badge badge-genre">{{ book.genre }}</span></td>
+          <td class="status-cell"><span class="badge" [ngClass]="getStatusBadgeClass(book.status)">{{ book.status
+              }}</span></td>
+          <td class="rating-cell">
+            @if(book.rating){
+            <span class="stars">★ {{ book.rating.toFixed(1) }}</span>
+            }
+            @else {
+            <span class="no-rating">—</span>
+            }
+          </td>
+          <td class="year-cell">{{ book.publishedYear }}</td>
+          <td class="actions-cell" (click)="$event.stopPropagation()">
+            <button mat-icon-button color="primary" (click)="editBook(book, $event)" aria-label="Edit book">
+              <mat-icon style="position: absolute;">edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteBook(book.id, $event)" aria-label="Delete book">
+              <mat-icon style="position: absolute;">delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    }
+  </div>
   }
 
-      <!-- Pagination Controls -->
-      <div class="pagination-section" *ngIf="totalBooks() > 0">
-      <div class="pagination-info">
-        <span>{{ getPaginationInfo() }}</span>
-        <div class="page-size-selector">
-          <label for="page-size">Items per page:</label>
-          <select 
-            id="page-size" 
-            class="page-size-select"
-            [value]="pageSize()"
-            (change)="changePageSize(+getEventTargetValue($event))"
-          >
-            <option [value]="5">5</option>
-            <option [value]="10">10</option>
-            <option [value]="25">25</option>
-            <option [value]="50">50</option>
-          </select>
-        </div>
+  <!-- Pagination Controls -->
+  @if (totalBooks() > 0) {
+  <div class="pagination-section">
+    <div class="pagination-info">
+      <span>{{ getPaginationInfo() }}</span>
+      <div class="page-size-selector">
+        <label for="page-size">Items per page:</label>
+        <select id="page-size" class="page-size-select" [value]="pageSize()"
+          (change)="changePageSize(+getEventTargetValue($event))">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="pagination-controls">
+      <button class="pagination-btn" (click)="previousPage()" [disabled]="!canPreviousPage()" title="Previous page">
+        ← Previous
+      </button>
+
+      <div class="page-numbers">
+        @for (page of pageNumbers(); track page) {
+        <button class="page-btn" [class.ellipsis]="page === -1" [class.active]="page === currentPage()"
+          [disabled]="page === -1" (click)="page !== -1 && goToPage(page)">
+          {{ page === -1 ? '...' : page }}
+        </button>
+        }
       </div>
 
-      <div class="pagination-controls">
-        <button 
-          class="pagination-btn"
-          (click)="previousPage()" 
-          [disabled]="!canPreviousPage()"
-          title="Previous page"
-        >
-          ← Previous
-        </button>
-
-        <div class="page-numbers">
-          @for (page of pageNumbers(); track page) {
-            <button
-              class="page-btn"
-              [class.ellipsis]="page === -1"
-              [class.active]="page === currentPage()"
-              [disabled]="page === -1"
-              (click)="page !== -1 && goToPage(page)"
-            >
-              {{ page === -1 ? '...' : page }}
-            </button>
-          }
-        </div>
-
-        <button 
-          class="pagination-btn"
-          (click)="nextPage()" 
-          [disabled]="!canNextPage()"
-          title="Next page"
-        >
-          Next →
-        </button>
-      </div>
-</div>
+      <button class="pagination-btn" (click)="nextPage()" [disabled]="!canNextPage()" title="Next page">
+        Next →
+      </button>
+    </div>
+  </div>
+  }

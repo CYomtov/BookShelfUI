@@ -494,7 +494,7 @@ export class BookState implements NgxsOnInit {
 
   @Action(FetchStatusesError)
   fetchStatusesError(ctx: StateContext<BookStateModel>, action: FetchStatusesError) {
-    console.error('Error fetching statuses:', action.payload);
+    // Error already logged via service layer
   }
 
   /**
@@ -523,7 +523,6 @@ export class BookState implements NgxsOnInit {
 
   @Action(FetchGenresError)
   fetchGenresError(ctx: StateContext<BookStateModel>, action: FetchGenresError) {
-    console.error('Error fetching genres:', action.payload);
     this.snackBar.open(`Failed to load genres: ${action.payload}`, 'Close', { duration: 4000 });
   }
 
